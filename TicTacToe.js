@@ -56,7 +56,7 @@ function Board({ xIsNext, squares, onPlay }) {
     let hasNull = false;
 
     for (let i = 0; i < 9; i++) {
-      if (squares[i] == null) {
+      if (!squares[i]) {
         hasNull = true;
       }
     }
