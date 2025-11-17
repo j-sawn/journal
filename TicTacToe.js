@@ -5,14 +5,20 @@ import { useState } from "react";
 1. For the current move only, show “You are at move #…” instead of a button.
 2. Rewrite Board to use two loops to make the squares instead of hardcoding them.
 3. Add a toggle button that lets you sort the moves in either ascending or descending order.
-4. When someone wins, highlight the three squares that caused the win (and when no one wins, display a message about the result being a draw).
+4. When no one wins, display a message about the result being a draw.
 5. Display the location for each move in the format (row, col) in the move history list.
 
 */
 
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, idNo }) {
+  idString = "square-" + idNo;
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button
+      id={idString}
+      className="square"
+      onClick={onSquareClick}
+      style={{ backgroundColor: "WHITE" }}
+    >
       {value}
     </button>
   );
@@ -40,6 +46,10 @@ function Board({ xIsNext, squares, onPlay }) {
   let status;
   if (winner) {
     status = "Winner: " + winner;
+    for (let i = 0; i < winner.length; i++) {
+      idString = "square-" + winner[i];
+      document.getElementById(idString).style.backgroundColor = "GREEN";
+    }
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
@@ -48,19 +58,55 @@ function Board({ xIsNext, squares, onPlay }) {
     <>
       <div className="status">{status}</div>
       <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+        <Square
+          value={squares[0]}
+          onSquareClick={() => handleClick(0)}
+          idNo={0}
+        />
+        <Square
+          value={squares[1]}
+          onSquareClick={() => handleClick(1)}
+          idNo={1}
+        />
+        <Square
+          value={squares[2]}
+          onSquareClick={() => handleClick(2)}
+          idNo={2}
+        />
       </div>
       <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+        <Square
+          value={squares[3]}
+          onSquareClick={() => handleClick(3)}
+          idNo={3}
+        />
+        <Square
+          value={squares[4]}
+          onSquareClick={() => handleClick(4)}
+          idNo={4}
+        />
+        <Square
+          value={squares[5]}
+          onSquareClick={() => handleClick(5)}
+          idNo={5}
+        />
       </div>
       <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+        <Square
+          value={squares[6]}
+          onSquareClick={() => handleClick(6)}
+          idNo={6}
+        />
+        <Square
+          value={squares[7]}
+          onSquareClick={() => handleClick(7)}
+          idNo={7}
+        />
+        <Square
+          value={squares[8]}
+          onSquareClick={() => handleClick(8)}
+          idNo={8}
+        />
       </div>
     </>
   );
@@ -81,7 +127,7 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return lines[i];
     }
   }
 
@@ -105,6 +151,18 @@ export default function Game() {
 
   function jumpTo(nextMove) {
     setCurrentMove(nextMove);
+    const winner = calculateWinner(history[nextMove]);
+    if (winner) {
+      for (let i = 0; i < winner.length; i++) {
+        idString = "square-" + winner[i];
+        document.getElementById(idString).style.backgroundColor = "GREEN";
+      }
+    } else {
+      for (let i = 0; i < 9; i++) {
+        idString = "square-" + i;
+        document.getElementById(idString).style.backgroundColor = "WHITE";
+      }
+    }
   }
 
   const moves = history.map((squares, move) => {
