@@ -4,8 +4,7 @@ import { useState } from "react";
 
 1. For the current move only, show “You are at move #…” instead of a button.
 2. Add a toggle button that lets you sort the moves in either ascending or descending order.
-3. When someone wins, highlight the three squares that caused the win (and when no one wins, display a message about the result being a draw).
-4. Display the location for each move in the format (row, col) in the move history list.
+3. Display the location for each move in the format (row, col) in the move history list.
 
 */
 
@@ -54,7 +53,19 @@ function Board({ xIsNext, squares, onPlay }) {
       document.getElementById(idString).style.backgroundColor = "GREEN";
     }
   } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
+    let hasNull = false;
+
+    for (let i = 0; i < 9; i++) {
+      if (squares[i] == null) {
+        hasNull = true;
+      }
+    }
+
+    if (hasNull) {
+      status = "NEXT PLAYER: " + (xIsNext ? "X" : "O");
+    } else {
+      status = "TIE!";
+    }
   }
 
   let numrows = 3;
@@ -75,7 +86,12 @@ function Board({ xIsNext, squares, onPlay }) {
     }
   }
 
-  return <> {boardSetup} </>;
+  return (
+    <>
+      <div className="status">{status}</div>
+      {boardSetup}
+    </>
+  );
 }
 
 function calculateWinner(squares) {
