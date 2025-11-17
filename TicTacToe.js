@@ -3,12 +3,15 @@ import { useState } from "react";
 /*
 
 1. For the current move only, show “You are at move #…” instead of a button.
-2. Rewrite Board to use two loops to make the squares instead of hardcoding them.
-3. Add a toggle button that lets you sort the moves in either ascending or descending order.
-4. When no one wins, display a message about the result being a draw.
-5. Display the location for each move in the format (row, col) in the move history list.
+2. Add a toggle button that lets you sort the moves in either ascending or descending order.
+3. When someone wins, highlight the three squares that caused the win (and when no one wins, display a message about the result being a draw).
+4. Display the location for each move in the format (row, col) in the move history list.
 
 */
+
+function BoardRow() {
+  return <div className="board-row"></div>;
+}
 
 function Square({ value, onSquareClick, idNo }) {
   idString = "square-" + idNo;
@@ -54,62 +57,25 @@ function Board({ xIsNext, squares, onPlay }) {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
 
-  return (
-    <>
-      <div className="status">{status}</div>
-      <div className="board-row">
+  let numrows = 3;
+  let numcols = 3;
+  const boardSetup = [];
+  for (let i = 0; i < numrows; i++) {
+    boardSetup.push(<BoardRow key={`row-${i}`} />);
+    for (let j = 0; j < numcols; j++) {
+      let idNo = numrows * i + j;
+      boardSetup.push(
         <Square
-          value={squares[0]}
-          onSquareClick={() => handleClick(0)}
-          idNo={0}
+          key={`square-${idNo}`}
+          value={squares[idNo]}
+          onSquareClick={() => handleClick(idNo)}
+          idNo={idNo}
         />
-        <Square
-          value={squares[1]}
-          onSquareClick={() => handleClick(1)}
-          idNo={1}
-        />
-        <Square
-          value={squares[2]}
-          onSquareClick={() => handleClick(2)}
-          idNo={2}
-        />
-      </div>
-      <div className="board-row">
-        <Square
-          value={squares[3]}
-          onSquareClick={() => handleClick(3)}
-          idNo={3}
-        />
-        <Square
-          value={squares[4]}
-          onSquareClick={() => handleClick(4)}
-          idNo={4}
-        />
-        <Square
-          value={squares[5]}
-          onSquareClick={() => handleClick(5)}
-          idNo={5}
-        />
-      </div>
-      <div className="board-row">
-        <Square
-          value={squares[6]}
-          onSquareClick={() => handleClick(6)}
-          idNo={6}
-        />
-        <Square
-          value={squares[7]}
-          onSquareClick={() => handleClick(7)}
-          idNo={7}
-        />
-        <Square
-          value={squares[8]}
-          onSquareClick={() => handleClick(8)}
-          idNo={8}
-        />
-      </div>
-    </>
-  );
+      );
+    }
+  }
+
+  return <> {boardSetup} </>;
 }
 
 function calculateWinner(squares) {
